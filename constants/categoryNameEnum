@@ -1,0 +1,5 @@
+const CategoryNameEnum = {
+    RED: "red",
+    GREEN: "green",
+    BLUE: "blue"
+};
