@@ -47,3 +47,30 @@ exports.remove = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.addPartner = async(req, res) => {
+    const { componentId, price, partnerId } = req.body;
+
+    if (!componentId || !price || !partnerId) {
+        return res.status(400).json({ message: 'Champs manquants.' });
+    }
+
+    try {
+        const component = await componentService.getComponentById(req.params.componentId);
+        if (!component) return res.status(404).json({ error: 'Not found' });
+
+        const existingPrice = component.price.find(p => p.partnerId.toString() === partnerId);
+
+        if (existingPrice) {
+            existingPrice.price = price;
+        } else {
+            component.price.push({ price, partnerId });
+        }
+
+        await component.save();
+
+        res.status(200).json({ message: existingPrice ? 'Prix mis à jour.' : 'Prix ajouté.', component });
+    } catch (err) {
+        res.status(500).json({ message: 'Erreur serveur.' });
+    }
+};

@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const { Schema, Types } = mongoose;
 
 const configurationsSchema = Schema({
-    userId: { type: Types.ObjectId, ref: 'User' },
+    name: { type: String },
+    userId: { type: Types.ObjectId, ref: 'UserAuth' },
     components: [{ type: Types.ObjectId, ref: 'Components' }]
 });
 
