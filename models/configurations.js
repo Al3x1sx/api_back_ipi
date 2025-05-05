@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const { Schema, Types } = mongoose;
 
-const configurationsSchema = mongoose.Schema({
-    userId: {type: ObjectId, ref: 'User'},
-    components: [{type: ObjectId, ref: 'Components', unique: true}]
+const configurationsSchema = Schema({
+    userId: { type: Types.ObjectId, ref: 'User' },
+    components: [{ type: Types.ObjectId, ref: 'Components' }]
 });
 
-module.exports = mongoose.model('Configurations', configurations);
+module.exports = mongoose.model('Configurations', configurationsSchema);
