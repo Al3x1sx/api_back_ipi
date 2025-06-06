@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const app = express();
 const port = 6969;
 const connectDataBase = require("./services/databaseConnection");
@@ -16,6 +17,7 @@ dotenv.config();
 //récupère les données au format json
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors()); 
 
 connectDataBase.connectDataBase();
 

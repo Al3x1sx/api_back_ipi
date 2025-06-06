@@ -49,14 +49,14 @@ exports.remove = async (req, res) => {
 };
 
 exports.addPartner = async(req, res) => {
-    const { componentId, price, partnerId } = req.body;
+    const { price, partnerId } = req.body;
 
-    if (!componentId || !price || !partnerId) {
+    if (!partnerId || !price ) {
         return res.status(400).json({ message: 'Champs manquants.' });
     }
 
     try {
-        const component = await componentService.getComponentById(req.params.componentId);
+        const component = await componentService.getComponentById(req.params.id);
         if (!component) return res.status(404).json({ error: 'Not found' });
 
         const existingPrice = component.price.find(p => p.partnerId.toString() === partnerId);
@@ -70,6 +70,31 @@ exports.addPartner = async(req, res) => {
         await component.save();
 
         res.status(200).json({ message: existingPrice ? 'Prix mis à jour.' : 'Prix ajouté.', component });
+    } catch (err) {
+        res.status(500).json({ message: 'Erreur serveur.' });
+    }
+};
+
+exports.removePartner = async(req, res) => {
+    const { partnerId } = req.body;
+
+    if (!partnerId ) {
+        return res.status(400).json({ message: 'Champs manquants.' });
+    }
+
+    try {
+        const component = await componentService.getComponentById(req.params.id);
+        if (!component) return res.status(404).json({ error: 'Not found' });
+
+        const existingPrice = component.price.find(p => p.partnerId.id.toString() === partnerId);
+
+        if (existingPrice) {
+            component.price.remove(existingPrice)
+        }
+
+        await componentService.updateComponent(component.id, component);
+
+        res.status(200).json({ message: existingPrice ? 'Partner supprimé' : 'Partner déjà supprimé.', component });
     } catch (err) {
         res.status(500).json({ message: 'Erreur serveur.' });
     }
